@@ -43,7 +43,7 @@ jobs:
         ${{ format('{0}/{1}', vars.DOCKERHUB_USERNAME, 'archlinux-devel') }}
       meta-tags: |
         type=raw,value=${{ matrix.latest }},enable={{is_default_branch}}
-        type=schedule,pattern={{date 'YYYYMMDD-HHmmss'}},prefix=${{ matrix.prefix }}
+        type=schedule,pattern={{date 'YYYYMMDD.HHmmss'}},prefix=${{ matrix.prefix }}
         type=sha,prefix=${{ matrix.prefix }}
       set-meta-labels: true
     secrets:
