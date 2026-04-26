@@ -1,0 +1,53 @@
+name: Publish Docker image
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 18 * * *"
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - variant: default
+            cn: "0"
+            prefix: ""
+            latest: latest
+          - variant: cn
+            cn: "1"
+            prefix: "cn-"
+            latest: cn
+
+    uses: docker/github-builder/.github/workflows/build.yml@v1
+    permissions:
+      contents: read
+      id-token: write
+    with:
+      output: image
+      file: ./Dockerfile
+      build-args: |
+        CN=${{ matrix.cn }}
+      platforms: linux/amd64
+      push: ${{ github.event_name != 'pull_request' }}
+      cache: true
+      cache-scope: ${{ matrix.variant }}
+      meta-images: |
+        ${{ format('{0}/{1}', vars.DOCKERHUB_USERNAME, 'archlinux-devel') }}
+      meta-tags: |
+        type=raw,value=${{ matrix.latest }},enable={{is_default_branch}}
+        type=schedule,pattern={{date 'YYYYMMDD-HHmmss'}},prefix=${{ matrix.prefix }}
+        type=sha,format=long,prefix=${{ matrix.prefix }}
+      set-meta-labels: true
+    secrets:
+      registry-auths: |
+        - registry: docker.io
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}

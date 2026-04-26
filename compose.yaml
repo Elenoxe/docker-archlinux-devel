@@ -1,0 +1,14 @@
+services:
+  archlinux-devel:
+    image: archlinux-devel:latest
+    build:
+      context: .
+      args:
+        CN: "0"
+
+  archlinux-devel-cn:
+    image: archlinux-devel:cn
+    build:
+      context: .
+      args:
+        CN: "1"
