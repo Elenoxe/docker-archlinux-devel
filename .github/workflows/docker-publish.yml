@@ -44,7 +44,7 @@ jobs:
       meta-tags: |
         type=raw,value=${{ matrix.latest }},enable={{is_default_branch}}
         type=schedule,pattern={{date 'YYYYMMDD-HHmmss'}},prefix=${{ matrix.prefix }}
-        type=sha,format=long,prefix=${{ matrix.prefix }}
+        type=sha,prefix=${{ matrix.prefix }}
       set-meta-labels: true
     secrets:
       registry-auths: |
