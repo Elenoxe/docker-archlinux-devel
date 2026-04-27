@@ -2,48 +2,54 @@
 
 Minimal Arch Linux development images based on `archlinux:base-devel`.
 
-This project builds two Docker image variants:
+## About
 
-- `archlinux-devel:latest`: default mirror setup
-- `archlinux-devel:cn`: China-friendly mirror setup with `archlinuxcn`
+This project provides ready-to-use Arch development containers with `zsh`, `yay`, common CLI tools, and a non-root `dev` user with passwordless sudo.
 
-Both variants are intended to provide a ready-to-use Arch development shell with `zsh`, `yay`, common CLI tools, and a non-root user.
+Two image variants are built:
 
-## Features
+- `latest`: default mirror setup
+- `cn`: China-friendly mirror setup with `archlinuxcn`
 
-- Based on `archlinux:base-devel`
-- Creates a passwordless sudo user named `dev` by default
-- Uses `zsh` as the default shell
-- Preconfigures `zimfw` and `powerlevel10k`
-- Adds the `arch4edu` repository
-- Optionally switches to CN mirrors and enables `archlinuxcn`
+Published registries:
 
-## Included Packages
+- Docker Hub: `elenoxe/archlinux-devel`
+- GitHub Container Registry: `ghcr.io/elenoxe/archlinux-devel`
 
-See [`build/packages.txt`](./build/packages.txt).
+Published tags include:
 
-## Variants
+- `latest`
+- `cn`
+- `sha-<commit>`
+- `cn-sha-<commit>`
 
-### Default
+## Usage
 
-The default variant keeps the standard Arch mirror configuration and uses the official `arch4edu` mirror.
+Pull the default image from Docker Hub:
 
-### CN
+```bash
+docker pull elenoxe/archlinux-devel:latest
+```
 
-The CN variant:
+Pull the CN variant from Docker Hub:
 
-- replaces the main Arch mirrorlist with Chinese mirrors (see [`build/pacman//mirrorlist.cn`](./build/pacman/mirrorlist.cn))
-- enables the `archlinuxcn` repository
+```bash
+docker pull elenoxe/archlinux-devel:cn
+```
 
-## Build
+Pull the default image from GHCR:
 
-Build the default image:
+```bash
+docker pull ghcr.io/elenoxe/archlinux-devel:latest
+```
+
+Build the default image locally:
 
 ```bash
 docker build -t archlinux-devel:latest archlinux-devel
 ```
 
-Build the CN image:
+Build the CN image locally:
 
 ```bash
 docker build --build-arg CN=1 -t archlinux-devel:cn archlinux-devel
@@ -58,25 +64,16 @@ docker build \
   archlinux-devel
 ```
 
-## Docker Compose
-
-[`compose.yaml`](./compose.yaml) defines both variants:
+Build both variants with [`compose.yaml`](./compose.yaml):
 
 ```bash
 docker compose build
 ```
 
-This produces:
-
-- `archlinux-devel:latest`
-- `archlinux-devel:cn`
-
-## Run
-
 Start an interactive shell:
 
 ```bash
-docker run --rm -it archlinux-devel:latest
+docker run --rm -it ghcr.io/elenoxe/archlinux-devel:latest
 ```
 
 Mount your workspace into the default working directory:
@@ -84,5 +81,19 @@ Mount your workspace into the default working directory:
 ```bash
 docker run --rm -it \
   -v "$PWD":/home/dev/workspace \
-  archlinux-devel:latest
+  ghcr.io/elenoxe/archlinux-devel:latest
 ```
+
+## Features
+
+- Based on `archlinux:base-devel`
+- Creates a passwordless sudo user named `dev` by default
+- Uses `zsh` as the default shell
+- Preconfigures `zimfw` and `powerlevel10k`
+- Adds the `arch4edu` repository
+- Includes packages listed in [`build/packages.txt`](./build/packages.txt)
+
+Variant details:
+
+- `latest` keeps the standard Arch mirror configuration and uses the official `arch4edu` mirror
+- `cn` replaces the main Arch mirrorlist with Chinese mirrors from [`build/pacman/mirrorlist.cn`](./build/pacman/mirrorlist.cn) and enables `archlinuxcn`
