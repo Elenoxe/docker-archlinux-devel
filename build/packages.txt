@@ -4,6 +4,7 @@ git
 man-db
 man-pages
 nano
+openssh
 sudo
 tmux
 tree
